@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
 use Faker\Factory;
 
@@ -10,7 +9,14 @@ class UsersController extends Controller
 {
     public function index()
     {
-        return $this->returnDummyUsers();
+        $users = $this->returnRealUsers();
+
+        return response()->json($users, 200);
+    }
+
+    public function show($id)
+    {
+        return User::findOrFail($id);
     }
 
     private function returnUsers()
@@ -30,6 +36,16 @@ class UsersController extends Controller
 
             array_push($users, $user);
         }
+
+        return [
+            'users' => $users,
+            'total' => count($users)
+        ];
+    }
+
+    private function returnRealUsers()
+    {
+        $users = User::all();
 
         return [
             'users' => $users,

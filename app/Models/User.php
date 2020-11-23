@@ -47,4 +47,7 @@ class User extends Authenticatable
 
     public function getFullNameAttribute()
     { return "{$this['firstName']} {$this['lastName']}"; }
+
+    public function skills()
+    { return $this->belongsToMany('App\Models\Skill', 'users_skills', 'userId', 'skillId'); }
 }
