@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UsersSkillsStoreRequest;
-use App\Models\User;
 use App\Models\UsersSkills;
+use App\Models\User;
 
 class UsersSkillsController extends Controller
 {

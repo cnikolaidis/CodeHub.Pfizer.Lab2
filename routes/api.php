@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UsersVacationsController;
 use App\Http\Controllers\UsersSkillsController;
 use App\Http\Controllers\SkillsController;
 use App\Http\Controllers\UsersController;
@@ -11,3 +12,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) { return
 Route::apiResource('users', UsersController::class)->except(['create', 'edit']);
 Route::apiResource('skills', SkillsController::class)->except(['create', 'edit', 'show']);
 Route::apiResource('users.skills', UsersSkillsController::class)->only(['index', 'store']);
+Route::apiResource('users.vacations', UsersVacationsController::class)->except(['create', 'edit']);
