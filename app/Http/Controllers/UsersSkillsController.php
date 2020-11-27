@@ -6,10 +6,8 @@ use App\Models\User;
 
 class UsersSkillsController extends Controller
 {
-    public function index($id)
+    public function index(User $user)
     {
-        $user = User::findOrFail($id);
-
         return response()->json($user->skills, 200);
     }
 }

@@ -8,9 +8,6 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) { return $request->user(); });
 
-Route::get('users', [UsersController::class, 'index']);
-Route::get('users/{id}', [UsersController::class, 'show']);
-
-Route::get('skills', [SkillsController::class, 'index']);
-
-Route::get('users/{id}/skills', [UsersSkillsController::class, 'index']);
+Route::apiResource('users', UsersController::class)->except(['create', 'edit']);
+Route::apiResource('skills', SkillsController::class)->only(['index']);
+Route::apiResource('users.skills', UsersSkillsController::class)->only(['index']);

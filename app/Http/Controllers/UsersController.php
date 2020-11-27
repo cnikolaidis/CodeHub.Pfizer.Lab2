@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\User;
 use Faker\Factory;
 
@@ -14,9 +15,34 @@ class UsersController extends Controller
         return response()->json($users, 200);
     }
 
-    public function show($id)
+    public function show(User $user)
     {
-        return User::findOrFail($id);
+        return $user;
+    }
+
+    public function store(Request $request)
+    {
+        $user = new User;
+        $user->firstName = $request->input('firstName');
+        $user->lastName = $request->input('lastName');
+        $user->email = $request->input('email');
+        $user->password = $request->input('password');
+
+        $user->save();
+    }
+
+    public function update(Request $request, User $user)
+    {
+        $user->firstName = $request->input('firstName');
+        $user->lastName = $request->input('lastName');
+        $user->email = $request->input('email');
+
+        $user->save();
+    }
+
+    public function destroy(User $user)
+    {
+        $user->delete();
     }
 
     private function returnUsers()
