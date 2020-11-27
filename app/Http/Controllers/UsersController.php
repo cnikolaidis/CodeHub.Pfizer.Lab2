@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\UsersUpdateRequest;
+use App\Http\Requests\UsersStoreRequest;
 use App\Models\User;
 use Faker\Factory;
 
@@ -20,22 +21,26 @@ class UsersController extends Controller
         return $user;
     }
 
-    public function store(Request $request)
+    public function store(UsersStoreRequest $request)
     {
+        $validRequest = $request->validated();
+
         $user = new User;
-        $user->firstName = $request->input('firstName');
-        $user->lastName = $request->input('lastName');
-        $user->email = $request->input('email');
-        $user->password = $request->input('password');
+        $user->firstName = $validRequest['firstName'];
+        $user->lastName = $validRequest['lastName'];
+        $user->email = $request['email'];
+        $user->password = $request['password'];
 
         $user->save();
     }
 
-    public function update(Request $request, User $user)
+    public function update(UsersUpdateRequest $request, User $user)
     {
-        $user->firstName = $request->input('firstName');
-        $user->lastName = $request->input('lastName');
-        $user->email = $request->input('email');
+        $validRequest = $request->validated();
+
+        $user->firstName = $validRequest['firstName'];
+        $user->lastName = $validRequest['lastName'];
+        $user->email = $validRequest['email'];
 
         $user->save();
     }
