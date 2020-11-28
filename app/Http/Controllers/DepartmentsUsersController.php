@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DepartmentUsersResource;
 use App\Models\Department;
 use App\Models\User;
 
@@ -9,9 +10,9 @@ class DepartmentsUsersController extends Controller
 {
     public function index(Department $department)
     {
-        $department->users;
+        $departmentUsersResource = new DepartmentUsersResource($department);
 
-        return response()->json(compact('department'), 200);
+        return response()->json(['department', $departmentUsersResource], 200);
     }
 
     public function store(Department $department, User $user)

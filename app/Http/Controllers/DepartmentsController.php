@@ -4,20 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DepartmentsUpdateRequest;
 use App\Http\Requests\DepartmentsStoreRequest;
+use App\Http\Resources\DepartmentResource;
 use App\Models\Department;
 
 class DepartmentsController extends Controller
 {
     public function index()
     {
-        $departments = Department::all();
+        $departments = DepartmentResource::collection(Department::all());
 
         return response()->json(compact('departments'), 200);
     }
 
     public function show(Department $department)
     {
-        return response()->json(compact('department'), 200);
+        $departmentResource = new DepartmentResource($department);
+
+        return response()->json(['department' => $departmentResource], 200);
     }
 
     public function store(DepartmentsStoreRequest $request)

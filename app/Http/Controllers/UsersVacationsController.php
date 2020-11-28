@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UsersVacationsUpdateRequest;
 use App\Http\Requests\UsersVacationsStoreRequest;
+use App\Http\Resources\UserVacationsResource;
+use App\Http\Resources\VacationResource;
 use App\Models\Vacation;
 use App\Models\User;
 
@@ -11,9 +13,9 @@ class UsersVacationsController extends Controller
 {
     public function index(User $user)
     {
-        $userVacations = $user->vacations;
+        $userVacations = new UserVacationsResource($user);
 
-        return response()->json(compact('userVacations'), 200);
+        return response()->json(['userVacations' => $userVacations], 200);
     }
 
     public function store(User $user, UsersVacationsStoreRequest $request)
@@ -40,7 +42,7 @@ class UsersVacationsController extends Controller
         if (count($user->vacations) < 1)
             return response()->json(['message' => "User {$user->fullName} has no vacations"], 400);
 
-        return response()->json(compact('vacation'), 200);
+        return response()->json(['vacation' => new VacationResource($vacation)], 200);
     }
 
     public function update(UsersVacationsUpdateRequest $request, User $user, Vacation $vacation)

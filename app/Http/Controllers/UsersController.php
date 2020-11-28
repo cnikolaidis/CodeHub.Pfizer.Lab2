@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UsersUpdateRequest;
 use App\Http\Requests\UsersStoreRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 
 class UsersController extends Controller
 {
     public function index()
     {
-        $users = User::all();
+        $users = UserResource::collection(User::all());
         $count = count($users);
 
         return response()->json(compact('users', 'count'), 200);
@@ -18,7 +19,9 @@ class UsersController extends Controller
 
     public function show(User $user)
     {
-        return response()->json(compact('user'));
+        $userResource = new UserResource($user);
+
+        return response()->json(['user' => $userResource]);
     }
 
     public function store(UsersStoreRequest $request)
@@ -33,7 +36,7 @@ class UsersController extends Controller
 
         $user->save();
 
-        $message = "User {$user->fullName} saved";
+        $message = "User was saved";
         return response()->json(compact('message'), 200);
     }
 
@@ -47,7 +50,7 @@ class UsersController extends Controller
 
         $user->save();
 
-        $message = "User {$user->fullName} updated";
+        $message = "User was updated";
         return response()->json(compact('message'), 200);
     }
 
@@ -55,7 +58,7 @@ class UsersController extends Controller
     {
         $user->delete();
 
-        $message = "User {$user->fullName} deleted";
+        $message = "User was deleted";
         return response()->json(compact('message'), 200);
     }
 }

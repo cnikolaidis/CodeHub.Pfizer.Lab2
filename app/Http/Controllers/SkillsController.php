@@ -4,20 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SkillsUpdateRequest;
 use App\Http\Requests\SkillsStoreRequest;
+use App\Http\Resources\SkillResource;
 use App\Models\Skill;
 
 class SkillsController extends Controller
 {
     public function index()
     {
-        $skills = Skill::all();
+        $skills = SkillResource::collection(Skill::all());
 
         return response()->json(compact('skills'), 200);
     }
 
     public function show(Skill $skill)
     {
-        return response()->json(compact('skill'), 200);
+        $skillResource = new SkillResource($skill);
+
+        return response()->json(['skill' => $skillResource], 200);
     }
 
     public function store(SkillsStoreRequest $request)

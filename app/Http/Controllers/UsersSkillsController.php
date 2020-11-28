@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UsersSkillsStoreRequest;
+use App\Http\Resources\UserSkillResource;
 use App\Models\UsersSkills;
 use App\Models\User;
 
@@ -10,9 +11,9 @@ class UsersSkillsController extends Controller
 {
     public function index(User $user)
     {
-        $userSkills = $user->skills;
+        $userSkillsResource = new UserSkillResource($user);
 
-        return response()->json(compact('userSkills'), 200);
+        return response()->json(['userSkills' => $userSkillsResource], 200);
     }
 
     public function store(User $user, UsersSkillsStoreRequest $request)
