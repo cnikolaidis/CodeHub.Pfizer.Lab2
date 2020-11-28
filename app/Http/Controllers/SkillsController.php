@@ -12,7 +12,12 @@ class SkillsController extends Controller
     {
         $skills = Skill::all();
 
-        return response()->json($skills, 200);
+        return response()->json(compact('skills'), 200);
+    }
+
+    public function show(Skill $skill)
+    {
+        return response()->json(compact('skill'), 200);
     }
 
     public function store(SkillsStoreRequest $request)
@@ -23,6 +28,9 @@ class SkillsController extends Controller
         $skill->title = $validRequest['title'];
 
         $skill->save();
+
+        $message = "Skill {$skill->title} saved";
+        return response()->json(compact('message'), 200);
     }
 
     public function update(SkillsUpdateRequest $request, Skill $skill)
@@ -32,10 +40,16 @@ class SkillsController extends Controller
         $skill->title = $validRequest['title'];
 
         $skill->save();
+
+        $message = "Skill {$skill->title} updated";
+        return response()->json(compact('message'), 200);
     }
 
     public function destroy(Skill $skill)
     {
         $skill->delete();
+
+        $message = "Skill {$skill->title} deleted";
+        return response()->json(compact('message'), 200);
     }
 }

@@ -53,4 +53,7 @@ class User extends Authenticatable
 
     public function vacations()
     { return $this->hasMany('App\Models\Vacation', 'userId', 'id'); }
+
+    public function department()
+    { return $this->belongsTo('App\Model\Department'); }
 }

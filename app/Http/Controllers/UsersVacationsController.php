@@ -11,7 +11,9 @@ class UsersVacationsController extends Controller
 {
     public function index(User $user)
     {
-        return response()->json($user->vacations, 200);
+        $userVacations = $user->vacations;
+
+        return response()->json(compact('userVacations'), 200);
     }
 
     public function store(User $user, UsersVacationsStoreRequest $request)
@@ -21,17 +23,27 @@ class UsersVacationsController extends Controller
 
         foreach ($vacationsArray as $vObj)
         {
-            $vObj->userId = $user->id;
-            $vObj->save();
+            $vacation = new Vacation;
+            $vacation->userId = $user->id;
+            $vacation->from = $vObj['from'];
+            $vacation->to = $vObj['to'];
+
+            $vacation->save();
         }
+
+        $message = "Vacations saved for user {$user->fullName}";
+        return response()->json(compact('message'), 200);
     }
 
     public function show(User $user, Vacation $vacation)
     {
-        return response()->json($vacation, 200);
+        if (count($user->vacations) < 1)
+            return response()->json(['message' => "User {$user->fullName} has no vacations"], 400);
+
+        return response()->json(compact('vacation'), 200);
     }
 
-    public function update(UsersVacationsUpdateRequest $request, Vacation $vacation)
+    public function update(UsersVacationsUpdateRequest $request, User $user, Vacation $vacation)
     {
         $validRequest = $request->validated();
 
@@ -39,10 +51,16 @@ class UsersVacationsController extends Controller
         $vacation->to = $validRequest['to'];
 
         $vacation->save();
+
+        $message = "Vacation updated for user {$user->fullName}";
+        return response()->json(compact('message'), 200);
     }
 
-    public function destroy(Vacation $vacation)
+    public function destroy(User $user, Vacation $vacation)
     {
         $vacation->delete();
+
+        $message = "Vacation deleted for user {$user->fullName}";
+        return response()->json(compact('message'), 200);
     }
 }

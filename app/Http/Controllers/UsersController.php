@@ -5,20 +5,20 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UsersUpdateRequest;
 use App\Http\Requests\UsersStoreRequest;
 use App\Models\User;
-use Faker\Factory;
 
 class UsersController extends Controller
 {
     public function index()
     {
-        $users = $this->returnRealUsers();
+        $users = User::all();
+        $count = count($users);
 
-        return response()->json($users, 200);
+        return response()->json(compact('users', 'count'), 200);
     }
 
     public function show(User $user)
     {
-        return $user;
+        return response()->json(compact('user'));
     }
 
     public function store(UsersStoreRequest $request)
@@ -32,6 +32,9 @@ class UsersController extends Controller
         $user->password = $request['password'];
 
         $user->save();
+
+        $message = "User {$user->fullName} saved";
+        return response()->json(compact('message'), 200);
     }
 
     public function update(UsersUpdateRequest $request, User $user)
@@ -43,44 +46,16 @@ class UsersController extends Controller
         $user->email = $validRequest['email'];
 
         $user->save();
+
+        $message = "User {$user->fullName} updated";
+        return response()->json(compact('message'), 200);
     }
 
     public function destroy(User $user)
     {
         $user->delete();
-    }
 
-    private function returnUsers()
-    { return "users"; }
-
-    private function returnDummyUsers()
-    {
-        $users = [];
-        $faker = Factory::create();
-        for ($i = 0; $i < 10; $i++)
-        {
-            $user = new User();
-            $user['firstName'] = $faker->firstName;
-            $user['lastName'] = $faker->lastName;
-            $user['email'] = $faker->email;
-            $user['password'] = $faker->password;
-
-            array_push($users, $user);
-        }
-
-        return [
-            'users' => $users,
-            'total' => count($users)
-        ];
-    }
-
-    private function returnRealUsers()
-    {
-        $users = User::all();
-
-        return [
-            'users' => $users,
-            'total' => count($users)
-        ];
+        $message = "User {$user->fullName} deleted";
+        return response()->json(compact('message'), 200);
     }
 }

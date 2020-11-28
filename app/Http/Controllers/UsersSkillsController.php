@@ -10,7 +10,9 @@ class UsersSkillsController extends Controller
 {
     public function index(User $user)
     {
-        return response()->json($user->skills, 200);
+        $userSkills = $user->skills;
+
+        return response()->json(compact('userSkills'), 200);
     }
 
     public function store(User $user, UsersSkillsStoreRequest $request)
@@ -26,5 +28,8 @@ class UsersSkillsController extends Controller
 
             $userSkill->save();
         }
+
+        $message = "Skills saved for user {$user->fullName}";
+        return response()->json(compact('message'), 200);
     }
 }
