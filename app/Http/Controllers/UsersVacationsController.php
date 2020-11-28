@@ -8,61 +8,97 @@ use App\Http\Resources\UserVacationsResource;
 use App\Http\Resources\VacationResource;
 use App\Models\Vacation;
 use App\Models\User;
+use Exception;
 
 class UsersVacationsController extends Controller
 {
     public function index(User $user)
     {
-        $userVacations = new UserVacationsResource($user);
+        try
+        {
+            $userVacations = new UserVacationsResource($user);
 
-        return response()->json(['userVacations' => $userVacations], 200);
+            return response()->json(['userVacations' => $userVacations], 200);
+        }
+        catch (Exception $x)
+        {
+            return response()->json(['error' => $x->getMessage()], 400);
+        }
     }
 
     public function store(User $user, UsersVacationsStoreRequest $request)
     {
-        $validRequest = $request->validated();
-        $vacationsArray = $validRequest['vacations'];
-
-        foreach ($vacationsArray as $vObj)
+        try
         {
-            $vacation = new Vacation;
-            $vacation->userId = $user->id;
-            $vacation->from = $vObj['from'];
-            $vacation->to = $vObj['to'];
+            $validRequest = $request->validated();
+            $vacationsArray = $validRequest['vacations'];
 
-            $vacation->save();
+            foreach ($vacationsArray as $vObj)
+            {
+                $vacation = new Vacation;
+                $vacation->userId = $user->id;
+                $vacation->from = $vObj['from'];
+                $vacation->to = $vObj['to'];
+
+                $vacation->save();
+            }
+
+            $message = "Vacations saved for user {$user->fullName}";
+            return response()->json(compact('message'), 200);
         }
-
-        $message = "Vacations saved for user {$user->fullName}";
-        return response()->json(compact('message'), 200);
+        catch (Exception $x)
+        {
+            return response()->json(['error' => $x->getMessage()], 400);
+        }
     }
 
     public function show(User $user, Vacation $vacation)
     {
-        if (count($user->vacations) < 1)
-            return response()->json(['message' => "User {$user->fullName} has no vacations"], 400);
+        try
+        {
+            if (count($user->vacations) < 1)
+                return response()->json(['message' => "User {$user->fullName} has no vacations"], 400);
 
-        return response()->json(['vacation' => new VacationResource($vacation)], 200);
+            return response()->json(['vacation' => new VacationResource($vacation)], 200);
+        }
+        catch (Exception $x)
+        {
+            return response()->json(['error' => $x->getMessage()], 400);
+        }
     }
 
     public function update(UsersVacationsUpdateRequest $request, User $user, Vacation $vacation)
     {
-        $validRequest = $request->validated();
+        try
+        {
+            $validRequest = $request->validated();
 
-        $vacation->from = $validRequest['from'];
-        $vacation->to = $validRequest['to'];
+            $vacation->from = $validRequest['from'];
+            $vacation->to = $validRequest['to'];
 
-        $vacation->save();
+            $vacation->save();
 
-        $message = "Vacation updated for user {$user->fullName}";
-        return response()->json(compact('message'), 200);
+            $message = "Vacation updated for user {$user->fullName}";
+            return response()->json(compact('message'), 200);
+        }
+        catch (Exception $x)
+        {
+            return response()->json(['error' => $x->getMessage()], 400);
+        }
     }
 
     public function destroy(User $user, Vacation $vacation)
     {
-        $vacation->delete();
+        try
+        {
+            $vacation->delete();
 
-        $message = "Vacation deleted for user {$user->fullName}";
-        return response()->json(compact('message'), 200);
+            $message = "Vacation deleted for user {$user->fullName}";
+            return response()->json(compact('message'), 200);
+        }
+        catch (Exception $x)
+        {
+            return response()->json(['error' => $x->getMessage()], 400);
+        }
     }
 }
