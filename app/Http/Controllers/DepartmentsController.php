@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DepartmentManagerRequest;
 use App\Http\Requests\DepartmentsUpdateRequest;
 use App\Http\Requests\DepartmentsStoreRequest;
 use App\Http\Resources\DepartmentResource;
 use App\Models\Department;
+use App\Models\User;
 use Exception;
 
 class DepartmentsController extends Controller
@@ -50,6 +52,26 @@ class DepartmentsController extends Controller
             $department->save();
 
             $message = "Department {$department->name} saved";
+            return response()->json(compact('message'), 200);
+        }
+        catch (Exception $x)
+        {
+            return response()->json(['error' => $x->getMessage()], 400);
+        }
+    }
+
+    public function storeManager(Department $department, DepartmentManagerRequest $request)
+    {
+        try
+        {
+            $validRequest = $request->validated();
+
+            $userId = $validRequest['id'];
+            $user = User::all()->find($userId);
+            $department->managerId = $user->id;
+            $department->save();
+
+            $message = "Manager {$user->fullName} is now manager of department {$department->name}";
             return response()->json(compact('message'), 200);
         }
         catch (Exception $x)

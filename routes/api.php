@@ -13,6 +13,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) { return
 
 Route::apiResource('users', UsersController::class)->except(['create', 'edit']);
 Route::apiResource('skills', SkillsController::class)->except(['create', 'edit']);
+
+Route::post('departments/{department}/manager', [DepartmentsController::class, 'storeManager']);
 Route::apiResource('departments', DepartmentsController::class)->except(['create', 'edit']);
 
 Route::apiResource('users.skills', UsersSkillsController::class)->except(['create', 'edit']);

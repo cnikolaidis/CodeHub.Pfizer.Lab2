@@ -20,7 +20,7 @@ class DepartmentsSeeder extends Seeder
 
         $users->each(function ($user) use ($departments)
         {
-            $dId = $departments->random(1)->id;
+            $dId = $departments->random(1)->first()->id;
             $user->update(['departmentId' => $dId]);
         });
     }

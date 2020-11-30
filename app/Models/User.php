@@ -49,11 +49,14 @@ class User extends Authenticatable
     { return "{$this['firstName']} {$this['lastName']}"; }
 
     public function skills()
-    { return $this->belongsToMany('App\Models\Skill', 'users_skills', 'userId', 'skillId'); }
+    { return $this->belongsToMany(Skill::class, 'users_skills', 'userId', 'skillId'); }
 
     public function vacations()
-    { return $this->hasMany('App\Models\Vacation', 'userId', 'id'); }
+    { return $this->hasMany(Vacation::class, 'userId', 'id'); }
 
     public function department()
-    { return $this->belongsTo('App\Model\Department'); }
+    { return $this->belongsTo(Department::class); }
+
+    public function departments()
+    { return $this->hasMany(Department::class, 'managerId', 'id'); }
 }

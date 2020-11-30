@@ -16,7 +16,8 @@ class VacationResource extends JsonResource
     {
         return [
             'userId' => $this->userId,
-            'from' => $this->from
+            'from' => $this->from,
+            'to' => $this->to
         ];
     }
 }
