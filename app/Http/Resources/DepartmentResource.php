@@ -16,8 +16,9 @@ class DepartmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => $this->name,
             'managerId' => $this->managerId,
-            'name' => $this->name
+            'manager' => new UserResource($this->manager)
         ];
     }
 }
